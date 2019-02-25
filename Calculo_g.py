@@ -1,7 +1,10 @@
 #-*-coding: utf-8-*-
 import re
 import numpy
+import matplotlib.pyplot as plt
 #***TALLER DE ELEMENTOS DE FISICA***
+
+
 
 resultados=[]
 #Hallamos g en el primer video, que cuenta con un factor de conversion diferente al de los demás
@@ -80,3 +83,13 @@ G=6.67392*(pow(10,-11))
 R=6378000
 g_est = (M*G)/(pow(R,2))
 print(g_est)
+
+x = list_time
+y = list_position
+plt.figure()
+plt.xlabel(r"$Time$", fontsize = 24, color = (1,0,0))
+plt.ylabel(r"$Position$", fontsize = 24, color = 'blue')
+
+
+plt.plot(x,y, 'k--')
+plt.show()
