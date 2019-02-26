@@ -1,29 +1,27 @@
 #-*-coding: utf-8-*-
 import re
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
+  
 #***TALLER DE ELEMENTOS DE FISICA***
 
 
-
+#Creamos una lista que obtendrá los resultados de g en los 7 videos 
 resultados=[]
 #Hallamos g en el primer video, que cuenta con un factor de conversion diferente al de los demás
-#1 fotograma = 1/25 seg
-#1 pixel = 1/695 metros
+#1 fotograma = 1/28 seg
+#1 pixel = 1/700 metros
 f= open("Trajectories/trajectory1.dat", "r")
 
-list_time = []
-aux_list_position = []
+list_time = [0]
+list_position = [0]
 for line in f:
     line_1 = re.findall('\w+', line)
-    list_time.append(float(line_1[0])*(1/25))
-    aux_list_position.append(float(line_1[2])*(1/695))
+    list_time.append(float(line_1[0])*(1/28))
+    list_position.append(float(line_1[2])*(1/700))
 
-list_position = []
-for i in aux_list_position[::-1]:
-    list_position.append(i)
 
-coeficientes = numpy.polyfit(list_time, list_position, 2)
+coeficientes = np.polyfit(list_time, list_position, 2)
 
 g = 2.*coeficientes[0]
 resultados.append(g)
@@ -37,17 +35,14 @@ for i in range(6):
     trajectory = "trajectories/trajectory"+str(i+2)+".dat"
     f_1 = open(trajectory, "r")
     list_time_1 = []
-    aux_list_position_1 = []
+    list_position_1 = []
     for line in f_1:
         line_1 = re.findall('\w+', line)
         list_time_1.append(float(line_1[0])*(1/32))
-        aux_list_position_1.append(float(line_1[2])*(1/747))
+        list_position_1.append(float(line_1[2])*(1/747))
 
-    list_position_1 = []
-    for i in aux_list_position_1[::-1]:
-        list_position_1.append(i)
 
-    coeficientes_1 = numpy.polyfit(list_time_1, list_position_1, 2)
+    coeficientes_1 = np.polyfit(list_time_1, list_position_1, 2)
 
     g_1 = 2.*coeficientes_1[0]
     resultados.append(g_1)
@@ -65,7 +60,7 @@ print("Promedio: "+str(media_arit)+("\n"))
 #Ahora calculamos la desviacion estandar
 aux_de =0
 for i in resultados:
-    x=abs(i-media_arit)
+    x=(i-media_arit)
     aux_de+= pow(x,2)
 aux_de = aux_de/7
 desviacion_estandar = pow(aux_de, 0.5)
@@ -84,12 +79,20 @@ R=6378000
 g_est = (M*G)/(pow(R,2))
 print(g_est)
 
+
+#Creamos grafica de Altura vs Tiempo
 x = list_time
 y = list_position
+
+y1 = []
+
+for i in x:
+    y1.append((4.9)*(pow(i,2)))
 plt.figure()
-plt.xlabel(r"$Time$", fontsize = 24, color = (1,0,0))
-plt.ylabel(r"$Position$", fontsize = 24, color = 'blue')
+plt.xlabel(r"$Time(s)$", fontsize = 24, color = 'black')
+plt.ylabel(r"$Position(m)$", fontsize = 24, color = 'black')
 
-
-plt.plot(x,y, 'k--')
+plt.plot(x, y, 'm-', linewidth = 2, label = 'G calculada')
+plt.plot(x, y1, 'c-', linewidth = 2, label = 'G estándar')
+plt.legend(loc = 4)
 plt.show()
